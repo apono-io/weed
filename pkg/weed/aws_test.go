@@ -75,8 +75,8 @@ var awsTestCases = []struct {
 	},
 }
 
-func newMockAwsService(client mockIamClient) *AwsService {
-	return &AwsService{
+func newMockAwsService(client mockIamClient) AwsService {
+	return AwsService{
 		ctx:       context.Background(),
 		iamClient: client,
 	}

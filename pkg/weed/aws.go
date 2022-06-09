@@ -57,7 +57,7 @@ type PolicyPermission struct {
 	Statement []AWSPolicyPermissionStatement `json:"Statement"`
 }
 
-func NewAwsService() (service *AwsService, err error) {
+func NewAwsService() (service AwsService, err error) {
 	service.ctx = context.TODO()
 
 	cfg, err := config.LoadDefaultConfig(service.ctx)

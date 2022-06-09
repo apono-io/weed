@@ -8,16 +8,16 @@ type Weed struct {
 }
 
 type WeedClient struct {
-	AwsService *AwsService
+	AwsService AwsService
 }
 
-func New() (client *WeedClient, err error) {
+func New() (client WeedClient, err error) {
 	service, err := NewAwsService()
 	if err != nil {
 		return client, fmt.Errorf("error creating aws service: %v", err)
 	}
 
-	return &WeedClient{
+	return WeedClient{
 		AwsService: service,
 	}, err
 }
