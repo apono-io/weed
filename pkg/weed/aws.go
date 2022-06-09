@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 )
@@ -71,7 +73,12 @@ func NewAwsService() (service AwsService, err error) {
 	return
 }
 
-func (svc AwsService) RolePermissions(roleName string) (permissions []string, err error) {
+func (svc AwsService) RolePermissions(roleArn string) (permissions []string, err error) {
+	roleName, err := svc.roleName(roleArn)
+	if err != nil {
+		return permissions, err
+	}
+
 	rolePolicies, err := svc.iamClient.ListRolePolicies(svc.ctx, &iam.ListRolePoliciesInput{
 		RoleName: aws.String(roleName),
 	})
@@ -126,6 +133,22 @@ func (svc AwsService) RolePermissions(roleName string) (permissions []string, er
 
 		permissions = append(permissions, policyPermissions...)
 	}
+
+	return
+}
+
+func (svc AwsService) roleName(arnName string) (name string, err error) {
+	if arn.IsARN(arnName) {
+		parsedArn, err := arn.Parse(arnName)
+		if err != nil {
+			return name, fmt.Errorf("error parsing ARN: %v", err)
+		}
+
+		arnName = parsedArn.Resource
+	}
+
+	parsedRes := strings.Split(arnName, "/")
+	name = parsedRes[len(parsedRes)-1]
 
 	return
 }
