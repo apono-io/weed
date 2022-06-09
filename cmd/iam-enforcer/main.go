@@ -5,6 +5,9 @@ import (
 	"flag"
 	"github.com/apono-io/weed/pkg/core"
 	"github.com/apono-io/weed/pkg/k8s"
+	"github.com/apono-io/weed/pkg/weed"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	log "k8s.io/klog/v2"
 	"os"
 	"os/signal"
@@ -19,10 +22,25 @@ func main() {
 	flag.IntVar(&port, "port", 8443, "HTTPS Port to listen on")
 	flag.Parse()
 
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	weedClient, err := weed.New()
+	if err != nil {
+		panic(err.Error())
+	}
+
 	log.Infof("Starting IAM Enforcer v%s (commit: %s, built at: %s)", core.Version, core.Commit, core.BuildDate)
 
 	ctx, cancel := context.WithCancel(context.Background())
-	server := k8s.NewServer(ctx, port)
+	server := k8s.NewServer(ctx, port, clientset, weedClient)
 	go func() {
 		if err := server.ListenAndServeTLS(tlsCert, tlsKey); err != nil {
 			log.Errorf("Failed to listen and serve: %v", err)
