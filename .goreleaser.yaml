@@ -2,9 +2,9 @@ before:
   hooks:
     - go mod tidy
 builds:
-  - id: weed
-    binary: weed
-    main: ./cmd/weed
+  - id: cli
+    binary: weed-cli
+    main: ./cmd/cli
     env:
       - CGO_ENABLED=0
     goos:
