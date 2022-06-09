@@ -3,8 +3,8 @@ package weed
 import "fmt"
 
 type Weed struct {
-	Added   []string
-	Removed []string
+	Missing     []string
+	Unnecessary []string
 }
 
 type WeedClient struct {
@@ -28,8 +28,8 @@ func (c *WeedClient) Find(desiredPermissions []string, iamRole string) (weed Wee
 		return weed, fmt.Errorf("error getting role permissions: %v", err)
 	}
 
-	weed.Added = diff(desiredPermissions, rolePermissions)
-	weed.Removed = diff(rolePermissions, desiredPermissions)
+	weed.Missing = diff(desiredPermissions, rolePermissions)
+	weed.Unnecessary = diff(rolePermissions, desiredPermissions)
 
 	return
 }

@@ -47,26 +47,26 @@ func findWeed() (err error) {
 		return
 	}
 
-	if len(diff.Added) > 0 {
-		fmt.Printf("Added %d permissions: \n", len(diff.Added))
-		for _, perm := range diff.Added {
+	if len(diff.Missing) > 0 {
+		fmt.Printf("Missing %d permissions: \n", len(diff.Missing))
+		for _, perm := range diff.Missing {
 			color.Green(fmt.Sprintf("  %s", perm))
 		}
 	}
 
-	if len(diff.Removed) > 0 {
-		fmt.Printf("Removed %d permissions: \n", len(diff.Removed))
-		for _, perm := range diff.Removed {
+	if len(diff.Unnecessary) > 0 {
+		fmt.Printf("Unnecessary %d permissions: \n", len(diff.Unnecessary))
+		for _, perm := range diff.Unnecessary {
 			color.Red(fmt.Sprintf("  %s", perm))
 		}
 	}
 
-	if len(diff.Added) > 0 {
+	if len(diff.Missing) > 0 {
 		if failOnMissing {
 			os.Exit(1)
 		}
 
-		if len(diff.Removed) > 0 && failOnDiff {
+		if len(diff.Unnecessary) > 0 && failOnDiff {
 			os.Exit(1)
 		}
 	}

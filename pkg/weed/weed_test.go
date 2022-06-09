@@ -48,10 +48,10 @@ func TestFindWeed(t *testing.T) {
 		want     Weed
 	}{
 		{required: []string{"ec2:DescribeInstances", "iam:CreateAccessKey"}, want: Weed{}},
-		{required: []string{}, want: Weed{Removed: []string{"ec2:DescribeInstances", "iam:CreateAccessKey"}}},
-		{required: []string{"ec2:DescribeInstances"}, want: Weed{Removed: []string{"iam:CreateAccessKey"}}},
-		{required: []string{"ec2:DescribeInstances", "iam:CreateAccessKey", "ec2:AssociateIamInstanceProfile"}, want: Weed{Added: []string{"ec2:AssociateIamInstanceProfile"}}},
-		{required: []string{"ec2:DescribeInstances", "ec2:AssociateIamInstanceProfile"}, want: Weed{Added: []string{"ec2:AssociateIamInstanceProfile"}, Removed: []string{"iam:CreateAccessKey"}}},
+		{required: []string{}, want: Weed{Unnecessary: []string{"ec2:DescribeInstances", "iam:CreateAccessKey"}}},
+		{required: []string{"ec2:DescribeInstances"}, want: Weed{Unnecessary: []string{"iam:CreateAccessKey"}}},
+		{required: []string{"ec2:DescribeInstances", "iam:CreateAccessKey", "ec2:AssociateIamInstanceProfile"}, want: Weed{Missing: []string{"ec2:AssociateIamInstanceProfile"}}},
+		{required: []string{"ec2:DescribeInstances", "ec2:AssociateIamInstanceProfile"}, want: Weed{Missing: []string{"ec2:AssociateIamInstanceProfile"}, Unnecessary: []string{"iam:CreateAccessKey"}}},
 	}
 
 	for _, test := range tests {

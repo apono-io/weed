@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/apono-io/weed/pkg/k8s/addmissions"
 	"github.com/apono-io/weed/pkg/k8s/api"
 	"github.com/apono-io/weed/pkg/weed"
@@ -14,7 +16,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/klog/v2"
-	"strings"
 )
 
 var (
@@ -101,7 +102,7 @@ func (v *validator) checkMissingPermissions(iamRoleArn string, requiredPermissio
 		return nil, err
 	}
 
-	return find.Added, nil
+	return find.Missing, nil
 }
 
 func (v *validator) extractIamRoleArn(template corev1.PodTemplateSpec) (string, error) {
