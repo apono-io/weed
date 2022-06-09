@@ -8,3 +8,4 @@ Todo:
 - [ ] GO Release
 - [ ] README / Docs
 - [ ] Examples
+- [ ] Handle * permissions
