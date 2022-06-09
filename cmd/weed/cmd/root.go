@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/apono-io/weed/pkg/weed"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -47,15 +48,27 @@ func findWeed() (err error) {
 	}
 
 	if len(diff.Added) > 0 {
-		fmt.Printf("Added permissions: %v\n", diff.Added)
+		fmt.Printf("Added %d permissions: \n", len(diff.Added))
+		for _, perm := range diff.Added {
+			color.Green(fmt.Sprintf("  %s", perm))
+		}
 	}
 
 	if len(diff.Removed) > 0 {
-		fmt.Printf("Removed permissions: %v\n", diff.Removed)
+		fmt.Printf("Removed %d permissions: \n", len(diff.Removed))
+		for _, perm := range diff.Removed {
+			color.Red(fmt.Sprintf("  %s", perm))
+		}
 	}
 
-	if (len(diff.Added) > 0 || len(diff.Removed) > 0) && failOnDiff {
-		return fmt.Errorf("diff found")
+	if len(diff.Added) > 0 {
+		if failOnMissing {
+			os.Exit(1)
+		}
+
+		if len(diff.Removed) > 0 && failOnDiff {
+			os.Exit(1)
+		}
 	}
 
 	return
