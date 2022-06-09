@@ -1,0 +1,82 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: weed
+    binary: weed
+    main: ./cmd/weed
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/apono-io/weed/pkg/core.Version={{.Version}} -X github.com/apono-io/weed/pkg/core.Commit={{.Commit}} -X github.com/apono-io/weed/pkg/core.BuildDate={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+  - id: iam-enforcer
+    binary: iam-enforcer
+    main: ./cmd/iam-enforcer
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/apono-io/weed/pkg/core.Version={{.Version}} -X github.com/apono-io/weed/pkg/core.Commit={{.Commit}} -X github.com/apono-io/weed/pkg/core.BuildDate={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+archives:
+  - builds:
+      - weed
+    name_template: 'weed_{{.Os}}-{{.Arch}}'
+dockers:
+  - goos: linux
+    goarch: amd64
+    use: buildx
+    ids:
+      - iam-enforcer
+    image_templates:
+      - "ghcr.io/apono-io/iam-enforcer:{{ .Tag }}-amd64"
+    dockerfile: './cmd/iam-enforcer/Dockerfile'
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title=iam-enforcer"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--platform=linux/arm64"
+  - goos: linux
+    goarch: arm64
+    use: buildx
+    ids:
+      - iam-enforcer
+    image_templates:
+      - "ghcr.io/apono-io/iam-enforcer:{{ .Tag }}-arm64"
+    dockerfile: './cmd/iam-enforcer/Dockerfile'
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--platform=linux/arm64"
+docker_manifests:
+  - name_template: "ghcr.io/apono-io/iam-enforcer:{{ .Tag }}"
+    image_templates:
+      - "ghcr.io/apono-io/iam-enforcer:{{ .Tag }}-amd64"
+      - "ghcr.io/apono-io/iam-enforcer:{{ .Tag }}-arm64"
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-snapshot"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'

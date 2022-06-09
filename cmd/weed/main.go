@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/apono-io/weed/pkg/core"
+)
 
 func main() {
-	fmt.Println("CLI")
+	fmt.Println("CLI", core.Version, core.Commit, core.BuildDate)
 }
