@@ -32,8 +32,8 @@ builds:
     mod_timestamp: "{{ .CommitTimestamp }}"
 archives:
   - builds:
-      - weed
-    name_template: 'weed_{{.Os}}-{{.Arch}}'
+      - cli
+    name_template: 'weed-cli_{{.Os}}-{{.Arch}}'
     format_overrides:
       - goos: windows
         format: zip

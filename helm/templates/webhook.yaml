@@ -3,7 +3,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: {{ include "helm.fullname" . }}
 webhooks:
-  - name: iam-enforcer.{{ .Release.Namespace }}.svc
+  - name: {{ include "helm.fullname" . }}.{{ .Release.Namespace }}.svc
     clientConfig:
       service:
         name: {{ include "helm.fullname" . }}

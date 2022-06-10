@@ -13,6 +13,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Specifies environment variables to add to the deployment
+environmentVariables: []
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
