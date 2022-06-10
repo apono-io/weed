@@ -1,0 +1,27 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "helm.fullname" . }}
+webhooks:
+  - name: iam-enforcer.{{ .Release.Namespace }}.svc
+    clientConfig:
+      service:
+        name: {{ include "helm.fullname" . }}
+        namespace: {{ .Release.Namespace }}
+        path: "/validate/permissions"
+      caBundle: {{ .Values.caBundle | quote }}
+    rules:
+      - operations: ["CREATE","UPDATE"]
+        apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        resources: ["deployments", "statefulsets"]
+        scope: "*"
+      - operations: ["CREATE","UPDATE"]
+        apiGroups: [ "" ]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+        scope: "*"
+    failurePolicy: Ignore
+    sideEffects: None
+    admissionReviewVersions:
+      - v1

@@ -34,6 +34,9 @@ archives:
   - builds:
       - weed
     name_template: 'weed_{{.Os}}-{{.Arch}}'
+    format_overrides:
+      - goos: windows
+        format: zip
 dockers:
   - goos: linux
     goarch: amd64

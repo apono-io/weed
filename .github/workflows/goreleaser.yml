@@ -1,0 +1,25 @@
+name: Go
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v3
+        with:
+          distribution: goreleaser
+          version: "1.9.2"
+          args: release --rm-dist

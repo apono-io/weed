@@ -1,0 +1,6 @@
+apiVersion: v2
+name: iam-enforcer
+description: A Helm chart for iam-enforcer
+type: application
+version: 0.1.0
+appVersion: "v0.0.1"
