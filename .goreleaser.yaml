@@ -52,7 +52,8 @@ dockers:
       - "--label=org.opencontainers.image.title=iam-enforcer"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.source=https://github.com/apono-io/weed"
+      - "--platform=linux/amd64"
   - goos: linux
     goarch: arm64
     use: buildx
