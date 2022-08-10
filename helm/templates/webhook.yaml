@@ -8,7 +8,7 @@ webhooks:
       service:
         name: {{ include "helm.fullname" . }}
         namespace: {{ .Release.Namespace }}
-        path: "/validate/permissions"
+        path: "/validate/actions"
       caBundle: {{ .Values.caBundle | quote }}
     rules:
       - operations: ["CREATE","UPDATE"]

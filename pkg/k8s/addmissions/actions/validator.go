@@ -1,4 +1,4 @@
-package permissions
+package actions
 
 import (
 	"context"
@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	noIamRoleFoundErr = errors.New("unable to validate deployment, could not find iam role")
+	noIamRoleFoundErr = errors.New("unable to validate manifest, could not find iam role")
 )
 
 func NewValidatorHook(ctx context.Context, clientset *kubernetes.Clientset, weedClient weed.WeedClient) addmissions.Hook {
@@ -66,11 +66,11 @@ func (v *validator) validate(_ context.Context, request *admission.AdmissionRequ
 		template = ss.Spec.Template
 	}
 
-	return v.validatePermissions(template)
+	return v.validateActions(template)
 }
 
-func (v *validator) validatePermissions(template corev1.PodTemplateSpec) (*addmissions.ValidationResult, error) {
-	if permissionsCsv, exists := template.Annotations[api.RequiredPermissions]; exists {
+func (v *validator) validateActions(template corev1.PodTemplateSpec) (*addmissions.ValidationResult, error) {
+	if permissionsCsv, exists := template.Annotations[api.RequiredActions]; exists {
 		if strings.TrimSpace(permissionsCsv) == "" {
 			return &addmissions.ValidationResult{Allowed: true}, nil
 		}
@@ -81,21 +81,21 @@ func (v *validator) validatePermissions(template corev1.PodTemplateSpec) (*addmi
 		}
 
 		permissions := strings.Split(permissionsCsv, ",")
-		missing, err := v.checkMissingPermissions(iamRoleArn, permissions)
+		missing, err := v.checkMissingActions(iamRoleArn, permissions)
 		if err != nil {
 			return nil, err
 		}
 
 		if len(missing) > 0 {
-			return &addmissions.ValidationResult{Msg: fmt.Sprintf("Missing permissions: %v", missing)}, nil
+			return &addmissions.ValidationResult{Msg: fmt.Sprintf("Missing actions: %v", missing)}, nil
 		}
 	}
 
 	return &addmissions.ValidationResult{Allowed: true}, nil
 }
 
-func (v *validator) checkMissingPermissions(iamRoleArn string, requiredPermissions []string) ([]string, error) {
-	klog.Infof("Checking required permissions for role: %s", iamRoleArn)
+func (v *validator) checkMissingActions(iamRoleArn string, requiredPermissions []string) ([]string, error) {
+	klog.Infof("Checking required actions for role: %s", iamRoleArn)
 
 	find, err := v.weedClient.Find(requiredPermissions, iamRoleArn)
 	if err != nil {

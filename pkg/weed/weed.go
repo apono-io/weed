@@ -25,7 +25,7 @@ func New() (client WeedClient, err error) {
 func (c *WeedClient) Find(desiredPermissions []string, iamRole string) (weed Weed, err error) {
 	rolePermissions, err := c.AwsService.RolePermissions(iamRole)
 	if err != nil {
-		return weed, fmt.Errorf("error getting role permissions: %v", err)
+		return weed, fmt.Errorf("error getting role actions: %v", err)
 	}
 
 	weed.Missing = diff(desiredPermissions, rolePermissions)
