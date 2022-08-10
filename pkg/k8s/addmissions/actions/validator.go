@@ -106,8 +106,12 @@ func (v *validator) checkMissingActions(iamRoleArn string, requiredPermissions [
 }
 
 func (v *validator) extractIamRoleArn(template corev1.PodTemplateSpec) (string, error) {
-	if arn, exists := template.Annotations[api.Kube2IamRoleArn]; exists {
-		return arn, nil
+	if arn, exists := template.Annotations[api.RoleArn]; exists && strings.TrimSpace(arn) != "" {
+		return strings.TrimSpace(arn), nil
+	}
+
+	if arn, exists := template.Annotations[api.Kube2IamRoleArn]; exists && strings.TrimSpace(arn) != "" {
+		return strings.TrimSpace(arn), nil
 	}
 
 	return v.extractServiceAccountIamRoleArn(template)
@@ -124,8 +128,8 @@ func (v *validator) extractServiceAccountIamRoleArn(template corev1.PodTemplateS
 		return "", err
 	}
 
-	if arn, exists := serviceAccount.Annotations[api.ServiceAccountIamRoleArn]; exists {
-		return arn, nil
+	if arn, exists := serviceAccount.Annotations[api.ServiceAccountIamRoleArn]; exists && strings.TrimSpace(arn) != "" {
+		return strings.TrimSpace(arn), nil
 	}
 
 	return "", noIamRoleFoundErr
