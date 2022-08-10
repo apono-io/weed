@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/apono-io/weed/pkg/k8s/addmissions"
-	"github.com/apono-io/weed/pkg/k8s/api"
+	"github.com/apono-io/weed/pkg/k8s/annotations"
 	"github.com/apono-io/weed/pkg/weed"
 	admission "k8s.io/api/admission/v1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -70,7 +70,7 @@ func (v *validator) validate(_ context.Context, request *admission.AdmissionRequ
 }
 
 func (v *validator) validateActions(template corev1.PodTemplateSpec) (*addmissions.ValidationResult, error) {
-	if permissionsCsv, exists := template.Annotations[api.RequiredActions]; exists {
+	if permissionsCsv, exists := template.Annotations[annotations.RequiredActions]; exists {
 		if strings.TrimSpace(permissionsCsv) == "" {
 			return &addmissions.ValidationResult{Allowed: true}, nil
 		}
@@ -106,11 +106,11 @@ func (v *validator) checkMissingActions(iamRoleArn string, requiredPermissions [
 }
 
 func (v *validator) extractIamRoleArn(template corev1.PodTemplateSpec) (string, error) {
-	if arn, exists := template.Annotations[api.RoleArn]; exists && strings.TrimSpace(arn) != "" {
+	if arn, exists := template.Annotations[annotations.RoleArn]; exists && strings.TrimSpace(arn) != "" {
 		return strings.TrimSpace(arn), nil
 	}
 
-	if arn, exists := template.Annotations[api.Kube2IamRoleArn]; exists && strings.TrimSpace(arn) != "" {
+	if arn, exists := template.Annotations[annotations.Kube2IamRoleArn]; exists && strings.TrimSpace(arn) != "" {
 		return strings.TrimSpace(arn), nil
 	}
 
@@ -128,7 +128,7 @@ func (v *validator) extractServiceAccountIamRoleArn(template corev1.PodTemplateS
 		return "", err
 	}
 
-	if arn, exists := serviceAccount.Annotations[api.ServiceAccountIamRoleArn]; exists && strings.TrimSpace(arn) != "" {
+	if arn, exists := serviceAccount.Annotations[annotations.ServiceAccountIamRoleArn]; exists && strings.TrimSpace(arn) != "" {
 		return strings.TrimSpace(arn), nil
 	}
 

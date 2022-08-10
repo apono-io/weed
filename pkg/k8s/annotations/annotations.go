@@ -1,4 +1,4 @@
-package api
+package annotations
 
 const (
 	RoleArn         = "iam-enforcer.apono.io/role-arn"
