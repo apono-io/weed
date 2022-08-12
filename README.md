@@ -1,6 +1,6 @@
 # WEED - What EEs Different - IAM role diff checker
 ## Prevent runtime errors in production ahead of time!
-![Introduction](.github/assets/intro.png)
+![Introduction](.github/assets/intro.jpg)
 
 Have you ever pushed to production only to find out that the permissions between staging and production environments are out of sync? resulting in access errors in a live environment? 
 Well we have, we got frustrated, learned and created WEED!!!
