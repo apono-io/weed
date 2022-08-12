@@ -39,7 +39,7 @@ func TestDiff(t *testing.T) {
 
 func TestFindWeed(t *testing.T) {
 	iamRole := "arn:aws:iam::123456789012:role/test-role"
-	weedClient := &WeedClient{
+	weedClient := &Client{
 		AwsService: newMockAwsService(awsTestCases[0].client),
 	}
 

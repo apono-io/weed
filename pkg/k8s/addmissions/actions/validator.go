@@ -22,7 +22,7 @@ var (
 	noIamRoleFoundErr = errors.New("unable to validate manifest, could not find iam role")
 )
 
-func NewValidatorHook(ctx context.Context, clientset *kubernetes.Clientset, weedClient weed.WeedClient) addmissions.Hook {
+func NewValidatorHook(ctx context.Context, clientset *kubernetes.Clientset, weedClient weed.Client) addmissions.Hook {
 	v := validator{
 		ctx:        ctx,
 		clientset:  clientset,
@@ -38,7 +38,7 @@ func NewValidatorHook(ctx context.Context, clientset *kubernetes.Clientset, weed
 type validator struct {
 	ctx        context.Context
 	clientset  *kubernetes.Clientset
-	weedClient weed.WeedClient
+	weedClient weed.Client
 }
 
 func (v *validator) validate(_ context.Context, request *admission.AdmissionRequest) (*addmissions.ValidationResult, error) {

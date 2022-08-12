@@ -11,7 +11,7 @@ import (
 )
 
 // NewServer creates and return a http.Server
-func NewServer(ctx context.Context, port int, clientset *kubernetes.Clientset, weedClient weed.WeedClient) *http.Server {
+func NewServer(ctx context.Context, port int, clientset *kubernetes.Clientset, weedClient weed.Client) *http.Server {
 	// Routers
 	ah := handlers.AdmissionHandler(ctx)
 	mux := http.NewServeMux()

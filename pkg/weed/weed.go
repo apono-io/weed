@@ -7,22 +7,22 @@ type Weed struct {
 	Unnecessary []string
 }
 
-type WeedClient struct {
+type Client struct {
 	AwsService AwsService
 }
 
-func New() (client WeedClient, err error) {
+func New() (client Client, err error) {
 	service, err := NewAwsService()
 	if err != nil {
 		return client, fmt.Errorf("error creating aws service: %v", err)
 	}
 
-	return WeedClient{
+	return Client{
 		AwsService: service,
 	}, err
 }
 
-func (c *WeedClient) Find(desiredPermissions []string, iamRole string) (weed Weed, err error) {
+func (c *Client) Find(desiredPermissions []string, iamRole string) (weed Weed, err error) {
 	rolePermissions, err := c.AwsService.RolePermissions(iamRole)
 	if err != nil {
 		return weed, fmt.Errorf("error getting role actions: %v", err)
