@@ -1,4 +1,9 @@
 # WEED - What EEs Different - IAM role diff checker
+[![Maintained by Apono.io](https://img.shields.io/badge/maintained%20by-apono.io-3f9fcc)](https://apono.io/?utm_source=github&utm_medium=organic_oss&utm_campaign=weed)
+[![Build Status](https://github.com/apono-io/weed/workflows/go/badge.svg)](https://github.com/apono-io/weed/actions?query=workflow%3Ago)
+![Go version](https://img.shields.io/github/go-mod/go-version/apono-io/weed)
+![GitHub Release (latest)](https://img.shields.io/github/v/release/apono-io/weed)
+
 ## Prevent runtime errors in production ahead of time!
 ![Introduction](.github/assets/intro.jpg)
 
