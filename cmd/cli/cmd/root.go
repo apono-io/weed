@@ -34,7 +34,9 @@ func Execute() error {
 					return err
 				}
 
-				defer file.Close()
+				defer func(file *os.File) {
+					_ = file.Close()
+				}(file)
 
 				var policy weed.PolicyPermission
 				err = json.NewDecoder(file).Decode(&policy)
@@ -67,7 +69,12 @@ func Execute() error {
 			if len(diff.Unnecessary) > 0 {
 				fmt.Printf("Unnecessary %d actions:\n", len(diff.Unnecessary))
 				for _, perm := range diff.Unnecessary {
-					color.Green(fmt.Sprintf("  %s", perm))
+					text := fmt.Sprintf("  %s", perm)
+					if failOnDiff {
+						color.Red(text)
+					} else {
+						color.Green(text)
+					}
 				}
 			}
 
@@ -88,8 +95,8 @@ func Execute() error {
 	}
 
 	flags := rootCmd.Flags()
-	flags.StringVarP(&roleArn, "role-arn", "r", "", "Role ARN")
-	err := rootCmd.MarkFlagRequired("role-arn")
+	flags.StringVarP(&roleArn, "role", "r", "", "Role ARN")
+	err := rootCmd.MarkFlagRequired("role")
 	if err != nil {
 		return err
 	}
@@ -99,5 +106,6 @@ func Execute() error {
 	flags.BoolVarP(&failOnDiff, "fail-on-diff", "d", false, "Return error if diff is found")
 	flags.BoolVarP(&failOnMissing, "fail-on-missing", "m", false, "Return error if actions are missing")
 
+	rootCmd.AddCommand(VersionCommand)
 	return rootCmd.Execute()
 }

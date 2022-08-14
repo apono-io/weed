@@ -11,7 +11,7 @@ To get the name of the role that is assigned to the pod we look for one of the f
 To get the expected AWS IAM actions iam-enforcer looks for one of the following annotations in this order:
 1. `iam-enforcer.apono.io/required-actions` - Comma separated list of IAM actions like: `ec2:DescribeInstances,ec2:DescribeVpcs`
 
-Example:
+### Example
 ```yaml
 apiVersion: apps/v1
 kind: Deployment

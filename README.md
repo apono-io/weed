@@ -27,3 +27,5 @@ Intercepts API requests to k8s api-server and acts as a validation layer, assuri
 
 ## Getting Started
 Installation instruction for the Kubernetes integrations are available [here](docs/k8s-integration.md), instruction for the CLI tool are available [here](docs/cli.md).
+
+![Demo](.github/assets/demo.gif)

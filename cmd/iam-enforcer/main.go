@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/apono-io/weed/pkg/core"
+	"github.com/apono-io/weed/pkg/build"
 	"github.com/apono-io/weed/pkg/k8s"
 	"github.com/apono-io/weed/pkg/weed"
 	"k8s.io/client-go/kubernetes"
@@ -37,7 +37,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	log.Infof("Starting IAM Enforcer v%s (commit: %s, built at: %s)", core.Version, core.Commit, core.BuildDate)
+	log.Infof("Starting IAM Enforcer v%s (commit: %s, built at: %s)", build.Version, build.Commit, build.Date)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	server := k8s.NewServer(ctx, port, clientset, weedClient)
