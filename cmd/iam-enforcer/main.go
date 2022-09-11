@@ -32,7 +32,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	weedClient, err := weed.New()
+	weedClient, err := weed.New("")
 	if err != nil {
 		panic(err.Error())
 	}
