@@ -13,16 +13,19 @@ import (
 
 func Execute() error {
 	var actions []string
+	var awsProfile string
 	var roleArn string
 	var policyFile string
+	var remoteRoleArn string
+	var remoteRoleAwsProfile string
 	var failOnDiff bool
 	var failOnMissing bool
 
 	var rootCmd = &cobra.Command{
 		Use: "weed",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(actions) == 0 && policyFile == "" {
-				return errors.New("required flag(s) \"actions, policy-file\" not set")
+			if len(actions) == 0 && policyFile == "" && remoteRoleArn == "" {
+				return errors.New("required flag(s) \"actions, policy-file, remote-role\" not set")
 			}
 
 			return nil
@@ -49,7 +52,21 @@ func Execute() error {
 				}
 			}
 
-			weedClient, err := weed.New()
+			if remoteRoleArn != "" {
+				weedClient, err := weed.New(remoteRoleAwsProfile)
+				if err != nil {
+					return err
+				}
+
+				rolePermissions, err := weedClient.AwsService.RolePermissions(remoteRoleArn)
+				if err != nil {
+					return err
+				}
+
+				actions = append(actions, rolePermissions...)
+			}
+
+			weedClient, err := weed.New(awsProfile)
 			if err != nil {
 				return err
 			}
@@ -95,6 +112,7 @@ func Execute() error {
 	}
 
 	flags := rootCmd.Flags()
+	flags.StringVarP(&awsProfile, "aws-profile", "p", "", "Role ARN")
 	flags.StringVarP(&roleArn, "role", "r", "", "Role ARN")
 	err := rootCmd.MarkFlagRequired("role")
 	if err != nil {
@@ -103,6 +121,8 @@ func Execute() error {
 
 	flags.StringSliceVarP(&actions, "actions", "a", []string{}, "Desired actions")
 	flags.StringVarP(&policyFile, "policy-file", "f", "", "Role ARN")
+	flags.StringVarP(&remoteRoleArn, "remote-role", "", "", "Remote Role ARN")
+	flags.StringVarP(&remoteRoleAwsProfile, "remote-role-aws-profile", "", "", "Remote Role AWS Profile")
 	flags.BoolVarP(&failOnDiff, "fail-on-diff", "d", false, "Return error if diff is found")
 	flags.BoolVarP(&failOnMissing, "fail-on-missing", "m", false, "Return error if actions are missing")
 
