@@ -11,8 +11,8 @@ type Client struct {
 	AwsService AwsService
 }
 
-func New() (client Client, err error) {
-	service, err := NewAwsService()
+func New(profile string) (client Client, err error) {
+	service, err := NewAwsService(profile)
 	if err != nil {
 		return client, fmt.Errorf("error creating aws service: %v", err)
 	}

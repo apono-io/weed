@@ -59,13 +59,14 @@ type PolicyPermission struct {
 	Statement []AWSPolicyPermissionStatement `json:"Statement"`
 }
 
-func NewAwsService() (service AwsService, err error) {
+func NewAwsService(profile string) (service AwsService, err error) {
 	service.ctx = context.TODO()
 
-	cfg, err := config.LoadDefaultConfig(service.ctx)
-	if err != nil {
-		return service, fmt.Errorf("error loading config: %v", err)
+	if profile == "" {
+		profile = config.DefaultSharedConfigProfile
 	}
+
+	cfg, err := config.LoadDefaultConfig(service.ctx, config.WithSharedConfigProfile(profile))
 
 	// Create a IAM client from config
 	service.iamClient = iam.NewFromConfig(cfg)
