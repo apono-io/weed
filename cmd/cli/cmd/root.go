@@ -112,8 +112,8 @@ func Execute() error {
 	}
 
 	flags := rootCmd.Flags()
-	flags.StringVarP(&awsProfile, "aws-profile", "p", "", "Role ARN")
-	flags.StringVarP(&roleArn, "role", "r", "", "Role ARN")
+	flags.StringVarP(&awsProfile, "aws-profile", "p", "", "Role AWS Profile")
+	flags.StringVarP(&roleArn, "role", "r", "", "Role ARN/Name")
 	err := rootCmd.MarkFlagRequired("role")
 	if err != nil {
 		return err
@@ -121,7 +121,7 @@ func Execute() error {
 
 	flags.StringSliceVarP(&actions, "actions", "a", []string{}, "Desired actions")
 	flags.StringVarP(&policyFile, "policy-file", "f", "", "Role ARN")
-	flags.StringVarP(&remoteRoleArn, "remote-role", "", "", "Remote Role ARN")
+	flags.StringVarP(&remoteRoleArn, "remote-role", "", "", "Remote Role ARN/Name")
 	flags.StringVarP(&remoteRoleAwsProfile, "remote-role-aws-profile", "", "", "Remote Role AWS Profile")
 	flags.BoolVarP(&failOnDiff, "fail-on-diff", "d", false, "Return error if diff is found")
 	flags.BoolVarP(&failOnMissing, "fail-on-missing", "m", false, "Return error if actions are missing")
